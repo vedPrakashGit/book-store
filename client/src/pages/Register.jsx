@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { registerUser } from "../apicalls/users";
+import Footer from "../components/Footer";
 
 const Register = () => {
   const nameRef = useRef();
@@ -70,12 +71,12 @@ const Register = () => {
 
   return (
     <>
-      <div className="container max-w-lg my-10">
+      <div className="container px-3 max-w-lg my-10">
         <ToastContainer />
-        <h1 className="text-white text-4xl font-bold text-center mb-4">
+        <h1 className="text-amber-300 text-4xl font-bold text-center mb-4">
           REGISTER
         </h1>
-        <form className="p-8 rounded-md border" onSubmit={submitHandler}>
+        <form className="p-4 md:p-8 rounded-md border" onSubmit={submitHandler}>
           <div>
             <label
               htmlFor="name"
@@ -90,7 +91,7 @@ const Register = () => {
                 name="name"
                 id="name"
                 onChange={(e) => setName(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 px-4 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset-0 focus:ring-indigo-600 sm:leading-6"
                 placeholder="Enter your name"
               />
             </div>
@@ -112,7 +113,7 @@ const Register = () => {
                 name="email"
                 id="email"
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 px-4 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset-0 focus:ring-indigo-600 sm:leading-6"
                 placeholder="Enter email address"
               />
               {!isEmailValid && !email.length && (
@@ -134,7 +135,7 @@ const Register = () => {
                 name="password"
                 id="password"
                 onChange={(e) => setPwd(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 px-4 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset-0 focus:ring-indigo-600 sm:leading-6"
                 placeholder="Enter the password"
               />
               {!isPwdValid && !pwd.length && (
@@ -149,7 +150,7 @@ const Register = () => {
               Select the user type
             </label>
             <div className="user-type flex border overflow-hidden rounded-md border-gray-300 mt-3">
-              <div className="flex-1 text-center">
+              <div className="flex-1 text-center text-white">
                 <input
                   type="radio"
                   name="userType"
@@ -166,7 +167,7 @@ const Register = () => {
                   Admin
                 </label>
               </div>
-              <div className="flex-1 text-center">
+              <div className="flex-1 text-center text-white">
                 <input
                   type="radio"
                   name="userType"
@@ -187,15 +188,19 @@ const Register = () => {
           </div>
 
           <div className="text-center mt-8">
-            <button className="py-3 w-6/12 border-amber-200 block mx-auto hover:bg-amber-300 hover:text-black outline-current">
+            <button className="py-3 w-6/12 border-amber-200 block mx-auto bg-amber-300 hover:bg-amber-400 hover:text-black outline-current">
               REGISTER
             </button>
             <p className="text-center text-gray-200 mt-2">
-              Already have an account with us? <Link to="/login">Login</Link>
+              Already have an account with us?{" "}
+              <Link to="/login" className="text-gray-400 hover:text-gray-300">
+                Login
+              </Link>
             </p>
           </div>
         </form>
       </div>
+      <Footer />
     </>
   );
 };

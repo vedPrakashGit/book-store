@@ -48,3 +48,15 @@ export const deleteBook = async (id) => {
     return err.response;
   }
 };
+
+export const getBooksAddedByUser = async (id) => {
+  try {
+    const response = await axiosInstance.post(
+      "/api/books/books-added-by-user",
+      id
+    );
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};

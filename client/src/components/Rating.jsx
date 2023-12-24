@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import RatingModal from "./RatingModal";
 import { toast } from "react-toastify";
@@ -6,19 +6,20 @@ import { hideLoading, showLoading } from "../redux/loaderSlice";
 import { getRatings } from "../apicalls/rating";
 import moment from "moment";
 import { AiFillLike } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const Rating = ({ bookId, showReviewModal }) => {
+const Rating = ({ bookId, isReviewed, showReviewModal, getUsersRatings }) => {
   const [showRatingModel, setShowRatingModal] = useState(false);
   const [ratings, setRatings] = useState([]);
   const [overallRating, setOverallRating] = useState(null);
   const [recommends, setRecommends] = useState(null);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const ratingModelHandler = () => {
     setShowRatingModal(!showRatingModel);
   };
 
-  // console.log(showReviewModal);
+  console.log(isReviewed);
 
   const getRatingsData = async () => {
     try {
@@ -67,12 +68,14 @@ const Rating = ({ bookId, showReviewModal }) => {
             bookId={bookId}
             showModalHandler={ratingModelHandler}
             getRatingsData={getRatingsData}
+            getUsersRatings={getUsersRatings}
+            isReviewed={isReviewed}
           />
         </Modal>
       )}
 
       <div>
-        <div className="flex justify-between items-center mt-5">
+        <div className="md:flex justify-between items-center mt-5">
           <div>
             <h2 className="text-2xl font-semibold text-amber-200">
               Ratings & Reviews
@@ -86,34 +89,48 @@ const Rating = ({ bookId, showReviewModal }) => {
               </label>
             )}
             {recommends && recommends > 0 ? (
-              <label className="flex items-center">
-                <AiFillLike className="text-amber-200 text-xl inline mr-2" />{" "}
-                {recommends} out of {ratings.length} reader(s) would like to
-                recommend this book.
+              <label className="flex items-center text-white">
+                <AiFillLike className="text-xl inline mr-2" /> {recommends} out
+                of {ratings.length} reader(s) would like to recommend this book.
               </label>
             ) : (
               ""
             )}
           </div>
-          <button
-            onClick={ratingModelHandler}
-            className="bg-amber-200 text-black py-2 hover:bg-amber-300 active:bg-amber-400 focus:outline-none"
-          >
-            + Add Your Review
-          </button>
+          {user && !user.isAdmin && (
+            <div className="md:text-right mt-3 md:mt-0">
+              <button
+                onClick={ratingModelHandler}
+                className={`bg-amber-200 text-black py-2 hover:bg-amber-300 active:bg-amber-400 focus:outline-none ${
+                  isReviewed && "opacity-70 cursor-not-allowed"
+                }`}
+                disabled={isReviewed}
+              >
+                + Add Your Review
+              </button>
+
+              {isReviewed && (
+                <p className="text-sm mt-2">
+                  You've already reviewed this book!
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {ratings && ratings.length == 0 && (
         <div className="p-6 my-8 border rounded text-center">
-          <p className="text-xl font-semibold">
+          <p className="text-xl text-white font-semibold">
             There are no ratings and reviews for this book.
             <br />
           </p>
-          <p className="text-md pt-2">
-            Click the "Add Your Review" button above to post your review for
-            this book.
-          </p>
+          {user && !user.isAdmin && (
+            <p className="text-md text-white pt-2">
+              Click the "Add Your Review" button above to post your review for
+              this book.
+            </p>
+          )}
         </div>
       )}
 
@@ -123,7 +140,7 @@ const Rating = ({ bookId, showReviewModal }) => {
             return (
               <div
                 key={rating._id}
-                className="pt-6 md:p-6 text-center md:text-left space-y-4 bg-slate-900 rounded-md mb-4"
+                className="py-6 md:p-6 text-center md:text-left space-y-4 bg-slate-900 rounded-md mb-4"
               >
                 <div className="start-container inline-flex">
                   {[1, 2, 3, 4, 5].map((star) =>
@@ -144,14 +161,14 @@ const Rating = ({ bookId, showReviewModal }) => {
                     )
                   )}
                 </div>
-                <blockquote className="mt-0-imp pt-0">
+                <blockquote className="mt-0-imp pt-0 text-white">
                   <h6 className="text-lg font-semibold mt-0 mb-2">
                     {rating.title}
                   </h6>
                   <p className="text-md">{`"${rating.review}"`}</p>
                 </blockquote>
-                <figcaption className="font-medium mt-1">
-                  <div className="text-slate-700 dark:text-slate-500">
+                <figcaption className="font-medium mt-0 md:mt-1">
+                  <div className="text-slate-400 dark:text-slate-500">
                     Reviewed by{" "}
                     <span className="text-sky-500 dark:text-sky-400">
                       {rating.user.name}

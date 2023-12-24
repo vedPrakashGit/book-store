@@ -75,10 +75,13 @@ const ChangePassword = () => {
         <h1 className="text-white text-4xl font-bold text-center mb-4">
           Change your password
         </h1>
-        <p className="text-center mb-3">
+        <p className="text-center mb-3 text-white">
           Fill the following input fields to do the same
         </p>
-        <form className="p-8 rounded-md border" onSubmit={submitHandler}>
+        <form
+          className="p-4 py-8 md:p-8 rounded-md border"
+          onSubmit={submitHandler}
+        >
           <div>
             <label
               htmlFor="email"
@@ -93,7 +96,7 @@ const ChangePassword = () => {
                 name="currentPassword"
                 id="currentPassword"
                 onChange={(e) => setCurPwd(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 pl-4 pr-20 ring-0 ring-inset-0 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-0 sm:text-sm sm:leading-6"
                 placeholder="Enter email address"
               />
             </div>
@@ -117,7 +120,7 @@ const ChangePassword = () => {
                 name="newPassword"
                 id="newPassword"
                 onChange={(e) => setNewPwd(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 pl-4 pr-20 ring-0 ring-inset-0 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-0 sm:text-sm sm:leading-6"
                 placeholder="Enter the password"
               />
             </div>
@@ -141,7 +144,7 @@ const ChangePassword = () => {
                 name="confirmNewPassword"
                 id="confirmNewPassword"
                 onChange={(e) => setConNewPwd(e.target.value)}
-                className="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-3 pl-4 pr-20 ring-0 ring-inset-0 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-0 sm:text-sm sm:leading-6"
                 placeholder="Enter the password"
               />
             </div>
@@ -153,12 +156,26 @@ const ChangePassword = () => {
           </div>
 
           <div className="text-center mt-8">
-            <button className="py-3 w-6/12 border-amber-200 block mx-auto hover:bg-amber-300 hover:text-black outline-current">
+            <button className="py-3 w-full sm:w-6/12 border-amber-200 block mx-auto bg-amber-300 hover:bg-amber-400 hover:text-black outline-current">
               CHANGE PASSWORD
             </button>
-            <p className="text-center text-gray-200 mt-2">
-              Back to <Link to="/">Home</Link>
-            </p>
+            <div className="flex justify-between pt-3">
+              <p className="text-center text-gray-200 mt-2">
+                Back to{" "}
+                <Link
+                  className="text-amber-300 hover:text-amber-100"
+                  to="/profile"
+                >
+                  Profile
+                </Link>
+              </p>
+              <p className="text-center text-gray-200 mt-2">
+                Back to{" "}
+                <Link className="text-amber-300 hover:text-amber-100" to="/">
+                  Home
+                </Link>
+              </p>
+            </div>
           </div>
         </form>
       </div>

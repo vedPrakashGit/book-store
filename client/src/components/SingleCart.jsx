@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-const SingleCart = ({ id, book, userId, getCartItems, qty }) => {
+const SingleCart = ({ id, book, userId, booksReviewed, getCartItems, qty }) => {
   const [quantity, setQuantity] = useState(qty);
   const dispatch = useDispatch();
+  const [isReviewed, setIsReviewed] = useState(false);
   const increaseQty = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -42,14 +43,15 @@ const SingleCart = ({ id, book, userId, getCartItems, qty }) => {
         dispatch(showLoading());
         const res = await updateCart({
           cartId: id,
-          book: book._id,
+          book: book && book._id,
           user: userId,
           quantity: quantity,
-          amount: quantity * book.price,
+          amount: quantity * (book && book.price),
         });
         if (!res.success) {
           toast.error(res.message);
         }
+        getCartItems();
         dispatch(hideLoading());
       } catch (err) {
         dispatch(hideLoading());
@@ -59,10 +61,39 @@ const SingleCart = ({ id, book, userId, getCartItems, qty }) => {
     updateCartItemData();
   }, [quantity]);
 
-  return (
+  useEffect(() => {
+    let isThisBookReviewed = null;
+    isThisBookReviewed =
+      booksReviewed &&
+      booksReviewed.filter((b) => b.book && b.book._id === book && book._id);
+    if (isThisBookReviewed && isThisBookReviewed.length) {
+      setIsReviewed(true);
+    } else {
+      setIsReviewed(false);
+    }
+  }, [booksReviewed, book]);
+
+  return book == null ? (
+    <div className="border border-slate-400 rounded p-4">
+      <p className="text-sm leading-6 text-gray-400">
+        <label className="text-white block">
+          <span className="font-semibold">Cart ID: {id}</span>
+        </label>
+        <span className="font-semibold">
+          Sorry, this book has been deleted by Admin.
+        </span>
+        <button
+          onClick={() => removeFromCart(id)}
+          className="py-2 border-amber-200 block mt-2 hover:bg-amber-300 hover:text-black outline-current"
+        >
+          Remove from Cart
+        </button>
+      </p>
+    </div>
+  ) : (
     <li className="border p-3 rounded-md border-gray-500">
-      <div className="gap-x-6 flex relative">
-        <Link to={`/book/${book._id}`}>
+      <div className="gap-x-6 block lg:flex relative">
+        <Link className="block mb-2 md:mb-0" to={`/book/${book._id}`}>
           <img src={book.thumbnail} alt="Book" width={150} />
         </Link>
         <div className="flex-1">
@@ -86,13 +117,13 @@ const SingleCart = ({ id, book, userId, getCartItems, qty }) => {
             </span>
           </div>
           <hr className="my-2" />
-          <div className="flex justify-between">
+          <div className="block md:flex justify-between">
             <div>
               <label className="text-white mb-1 block">Choose quantity</label>
               <div className="flex items-center gap-3">
                 <button
                   onClick={decreaseQty}
-                  className="py-2 border-gray-600 bg-gray-600 hover:border-gray-600"
+                  className="py-2 text-white border-gray-600 bg-gray-600 hover:border-gray-600"
                 >
                   -
                 </button>
@@ -103,30 +134,49 @@ const SingleCart = ({ id, book, userId, getCartItems, qty }) => {
                 />
                 <button
                   onClick={increaseQty}
-                  className="py-2 border-gray-600 bg-gray-600 hover:border-gray-600"
+                  className="py-2 text-white border-gray-600 bg-gray-600 hover:border-gray-600"
                 >
                   +
                 </button>
               </div>
             </div>
             {quantity > 1 && (
-              <div>
-                <label className="text-white mb-1 block text-right border-b-2 pb-2 border-b-slate-600">
+              <div className="my-3 md:my-0">
+                <label className="text-white mb-1 block md:text-right border-b-2 pb-2 border-b-slate-600">
                   Subtotal
                 </label>
-                <h6 className="font-bold text-md pt-1">
+                <h6 className="font-bold text-md pt-1 text-white">
                   Rs. {(book.price * quantity).toFixed(2)}
                 </h6>
               </div>
             )}
           </div>
 
-          <button
-            onClick={() => removeFromCart(id)}
-            className="py-2 border-amber-200 block mt-2 hover:bg-amber-300 hover:text-black outline-current"
-          >
-            Remove from Cart
-          </button>
+          <div className="block md:flex justify-between gap-3">
+            {isReviewed ? (
+              <button
+                disabled="true"
+                title="Give Review"
+                className="py-2 block px-3 w-full rounded-lg border-0 border-slate-500 bg-slate-500 mt-2 text-white hover:bg-slate-500 outline-current cursor-not-allowed"
+              >
+                Already Reviewed
+              </button>
+            ) : (
+              <Link
+                to={`/book/${book._id}/showReviewModal`}
+                title="Give Review"
+                className="py-2 whitespace-nowrap px-4 block text-center rounded-lg border border-amber-200 mt-2 text-white hover:bg-amber-300 hover:text-black outline-current"
+              >
+                &#9733; Give Review
+              </Link>
+            )}
+            <button
+              onClick={() => removeFromCart(id)}
+              className="py-2 border-amber-200 block mt-2 w-full bg-amber-300 hover:bg-amber-400 hover:text-black outline-current"
+            >
+              Remove from Cart
+            </button>
+          </div>
         </div>
       </div>
     </li>

@@ -6,26 +6,30 @@ import {
   AiOutlineUser,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { useSelector } from "react-redux";
 
-const Navbar = ({ cartItems }) => {
-  const { user } = useSelector((state) => state.user);
-  // const cart = useSelector((state) => state.cart);
-  // const { loading } = useSelector((state) => state.loader);
-  // console.log(user, loading, cart);
+const Navbar = ({ user, cartItems }) => {
+  // console.log(cartItems);
   return (
     <div className="container max-w-screen-xl px-3 sticky top-0 black-bg z-10 ">
-      <nav className="flex items-center px-3 py-2 border-b-2 border-gray-500 border-b-gray-500">
+      <nav
+        className={`flex items-center py-2 border-b-2 border-gray-500 border-b-gray-500 ${
+          user && !user.isAdmin ? "flex-col sm:flex-row" : ""
+        }`}
+      >
         <h2>
           <Link
-            className="logo font-bold text-3xl text-white hover:text-yellow-300 flex items-center"
+            className="logo font-bold text-xl text-3xl text-white hover:text-yellow-300 flex items-center"
             to="/"
           >
             <ImBook className="text-2xl mr-2" />
             BookStore
           </Link>
         </h2>
-        <ul className="flex justify-end items-center w-full gap-x-8">
+        <ul
+          className={`flex justify-end items-center w-full gap-x-8 ${
+            user && !user.isAdmin ? "justify-center sm:justify-end" : ""
+          }`}
+        >
           <li>
             <Link
               className="text-white hover:text-yellow-300"

@@ -13,7 +13,7 @@ const Modal = ({ showModalHandler, children }) => {
   return ReactDOM.createPortal(
     <>
       <div className="modal-overlay" onClick={showModalHandler}></div>
-      <div className="modal-dialog max-w-xl mx-auto bg-white rounded-md overflow-hidden fixed p-4 w-[32rem]">
+      <div className="modal-dialog max-w-xl mx-auto bg-white rounded-md overflow-hidden fixed p-4 w-full mob-position">
         {children}
       </div>
     </>,

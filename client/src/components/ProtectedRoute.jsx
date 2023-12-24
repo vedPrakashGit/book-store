@@ -16,6 +16,7 @@ const ProtectedRoute = ({ children }) => {
       if (res.success) {
         dispatch(SetUser(res.data));
       } else {
+        console.log("gettting no token", localStorage.getItem("token"));
         dispatch(SetUser(null));
         localStorage.removeItem("token");
         toast.error(res.message);
@@ -23,13 +24,15 @@ const ProtectedRoute = ({ children }) => {
       }
     } catch (error) {
       dispatch(SetUser(null));
-      toast(error.message);
+      console.log(error);
+      localStorage.removeItem("token");
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      getLatestUser();
+      getLatestUser(localStorage.getItem("token"));
     } else {
       navigate("/login");
     }
@@ -38,7 +41,7 @@ const ProtectedRoute = ({ children }) => {
   return (
     <>
       <ToastContainer />
-      <div className="container max-w-screen-xl">
+      <div className="container px-3 max-w-screen-xl">
         {children}
         <Footer />
       </div>

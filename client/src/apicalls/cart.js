@@ -35,3 +35,12 @@ export const removeCart = async (id) => {
     return err.response;
   }
 };
+
+export const emptyCart = async (id) => {
+  try {
+    const response = await axiosInstance.post("/api/carts/empty-cart", id);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};

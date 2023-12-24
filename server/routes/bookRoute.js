@@ -76,12 +76,29 @@ router.post("/delete-book", async (req, res) => {
     await Book.findByIdAndDelete(req.body.bookId);
     res.send({
       success: true,
-      message: "The book has been successfully deleted!",
+      message: "The book has been successfully removed!",
     });
   } catch (err) {
     res.send({
       success: true,
       message: err,
+    });
+  }
+});
+
+// Books added by user
+router.post("/books-added-by-user", async (req, res) => {
+  try {
+    const books = await Book.find({ user: req.body.userId });
+    res.send({
+      success: true,
+      message: "Books added by the user have been fetched successfully!",
+      data: books,
+    });
+  } catch (err) {
+    res.send({
+      success: true,
+      message: err.message,
     });
   }
 });

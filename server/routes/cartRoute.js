@@ -51,6 +51,24 @@ router.post("/remove-cart", async (req, res) => {
   }
 });
 
+router.post("/empty-cart", async (req, res) => {
+  try {
+    let carts = await Cart.find({ user: req.body.userId });
+    carts.forEach(async (cart) => {
+      await Cart.findByIdAndDelete(cart._id);
+    });
+    res.send({
+      success: true,
+      message: "The cart of this user has been emptied!",
+    });
+  } catch (err) {
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 router.put("/update-cart", async (req, res) => {
   try {
     await Cart.findByIdAndUpdate(req.body.cartId, req.body);

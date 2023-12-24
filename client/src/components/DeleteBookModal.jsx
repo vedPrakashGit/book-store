@@ -3,30 +3,45 @@ import { AiOutlineClose } from "react-icons/ai";
 import { deleteBook } from "../apicalls/books";
 import { hideLoading, showLoading } from "../redux/loaderSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const DeleteBookModal = ({
   getAllBooksOnLoad,
   showDeleteBookModalHandler,
   id,
+  singleBook,
+  booksAddedByUser,
+  isDeletedFromProfile = null,
 }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  console.log(booksAddedByUser);
   const deleteBookHandler = async () => {
     try {
-      showLoading();
+      dispatch(showLoading());
       const res = await deleteBook({ bookId: id });
       if (res.success) {
         toast.success(res.message);
-        getAllBooksOnLoad();
+        if (singleBook) {
+          navigate("/");
+        } else {
+          if (isDeletedFromProfile) {
+            booksAddedByUser();
+          } else {
+            getAllBooksOnLoad();
+          }
+        }
         showDeleteBookModalHandler();
       } else {
         toast.error(res.message);
       }
-      hideLoading();
+      dispatch(hideLoading());
     } catch (err) {
+      dispatch(hideLoading());
       toast.error(err.message);
     }
   };
-
-  console.log(id);
 
   return (
     <div className="px-4">
@@ -44,17 +59,17 @@ const DeleteBookModal = ({
         to add this book.
       </p>
 
-      <div className="modal-footer flex gap-3 pt-2 mt-4">
+      <div className="modal-footer block sm:flex gap-3 pt-2 mt-4">
         <button
           type="button"
           onClick={showDeleteBookModalHandler}
-          className="py-2 flex-1 border-gray-400 block mt-2 bg-transparent text-black hover:bg-gray-100 hover:text-black outline-current"
+          className="py-2 w-full flex-1 border-gray-400 block mt-2 bg-transparent text-black hover:bg-gray-100 hover:text-black outline-current"
         >
           Cancel
         </button>
         <button
           onClick={deleteBookHandler}
-          className="py-2 flex-1 border-amber-200 block mt-2 hover:bg-amber-300 hover:text-black outline-current"
+          className="py-2 w-full flex-1 border-amber-300 block mt-2 bg-amber-300 hover:bg-amber-400 hover:text-black outline-current"
         >
           Delete Book
         </button>
